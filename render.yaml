@@ -9,4 +9,4 @@ services:
     envVars:
       - key: PORT
         value: 8000
-    autoDeploy: true
+    autoDeploy: false  # Controlled by CI/CD pipeline
