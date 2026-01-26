@@ -1,0 +1,112 @@
+openapi: 3.0.0
+info:
+  title: Portfolio Collinearity Analyzer
+  description: API for analyzing financial asset collinearity and redundancy.
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8000
+    description: Local Development Server
+
+paths:
+  /health:
+    get:
+      summary: System Health Check
+      description: Returns the status of the API.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+
+  /analyze:
+    post:
+      summary: Analyze Portfolio Collinearity
+      description: Detects redundant assets by analyzing historical price correlations and R-squared.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PortfolioInput'
+      responses:
+        '200':
+          description: Analysis Result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisResult'
+        '400':
+          description: Validation Error (e.g. fewer than 2 assets)
+        '500':
+          description: Server Error (e.g. insufficient data)
+
+components:
+  schemas:
+    PortfolioInput:
+      type: object
+      required:
+        - isins
+      properties:
+        isins:
+          type: array
+          items:
+            type: string
+          description: List of ISIN codes or Tickers to analyze.
+          example: ["AAPL", "MSFT"]
+        investment_horizon_years:
+          type: integer
+          description: Number of years of historical data to fetch.
+          default: 1
+          example: 1
+
+    AssetPair:
+      type: object
+      required:
+        - asset_a
+        - asset_b
+        - correlation
+        - r_squared
+      properties:
+        asset_a:
+          type: string
+          description: First asset symbol.
+        asset_b:
+          type: string
+          description: Second asset symbol.
+        correlation:
+          type: number
+          format: float
+          description: Pearson correlation coefficient.
+        r_squared:
+          type: number
+          format: float
+          description: Coefficient of determination (Correlation^2).
+
+    AnalysisResult:
+      type: object
+      required:
+        - correlation_matrix
+        - high_r_squared_pairs
+      properties:
+        correlation_matrix:
+          type: object
+          description: Matrix of correlations (Asset -> Asset -> Correlation).
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: number
+              format: float
+          example:
+            "AAPL":
+              "MSFT": 0.65
+        high_r_squared_pairs:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssetPair'
+          description: List of asset pairs with R^2 > 0.5.
