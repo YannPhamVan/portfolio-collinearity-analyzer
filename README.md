@@ -14,6 +14,12 @@ The analyzer processes a list of ISINs/tickers and an investment horizon to:
 
 ## API Usage
 
+### Endpoint: `GET /health`
+Returns system status.
+```json
+{ "status": "ok" }
+```
+
 ### Endpoint: `POST /analyze`
 
 #### Request
@@ -51,7 +57,8 @@ POST /analyze
    ```
 2. **Start Server**:
    ```bash
-   uvicorn backend.main:app --reload
+   cd backend
+   uvicorn main:app --reload
    ```
 
 ## Limitations & Future Improvements
