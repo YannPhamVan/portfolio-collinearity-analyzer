@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: portfolio-collinearity-analyzer
+    env: docker
+    region: frankfurt
+    plan: free
+    dockerContext: .
+    dockerfilePath: Dockerfile
+    envVars:
+      - key: PORT
+        value: 8000
+    autoDeploy: true

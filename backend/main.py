@@ -44,3 +44,11 @@ if __name__ == "__main__":
     import uvicorn
     # Run the app locally
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+# Mount static files at the end to allow API routes to take precedence
+# This assumes 'static' directory exists (populated by Docker build)
+import os
+from fastapi.staticfiles import StaticFiles
+
+if os.path.exists("static"):
+    app.mount("/", StaticFiles(directory="static", html=True), name="static")

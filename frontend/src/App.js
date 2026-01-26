@@ -26,7 +26,7 @@ function App() {
     }
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/analyze', {
+      const response = await fetch('/analyze', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -114,7 +114,7 @@ function App() {
           </div>
 
           {/* High R2 Pairs */}
-          <h2>High R² Pairs (> 0.5)</h2>
+          <h2>High R² Pairs (&gt; 0.5)</h2>
           {result.high_r_squared_pairs.length === 0 ? (
             <p>No highly collinear pairs detected.</p>
           ) : (

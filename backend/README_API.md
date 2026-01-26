@@ -8,8 +8,8 @@ Ensure you are in the `backend` directory and dependencies are installed.
 
 ```bash
 cd backend
-pip install -r ../requirements.txt
-uvicorn main:app --reload
+uv sync
+uv run uvicorn main:app --reload
 ```
 The server will start at `http://127.0.0.1:8000`.
 

@@ -13,23 +13,40 @@ def fetch_historical_data(isins: List[str], years: int) -> pd.DataFrame:
     start_date = end_date - timedelta(days=365 * years)
     
     # Try fetching data with yfinance
-    # yfinance expects space-separated tickers
-    tickers_str = " ".join(isins)
+    # Use iterative fetching to avoid threading/sqlite locking issues in Docker
+    data_frames = {}
     
-    try:
-        # download data
-        data = yf.download(tickers_str, start=start_date, end=end_date, progress=False)['Adj Close']
-        
-        # If passed single ticker, yfinance returns Series, convert to DataFrame
-        if isinstance(data, pd.Series):
-            data = data.to_frame(name=isins[0])
+    for ticker in isins:
+        try:
+            # Fetch history for this ticker
+            # period="1y", "2y", etc. yfinance accepts '1y', '2y', '5y', '10y', 'ytd', 'max'
+            # We approximate years to period string or just use start/end dates
+            hist = yf.Ticker(ticker).history(start=start_date, end=end_date)
             
-        # Ensure we have all columns, even if some failed
-        if data.empty:
-             data = pd.DataFrame()
-    except Exception as e:
-        print(f"yfinance failed: {e}. Falling back to mock data for all assets.")
+            if not hist.empty:
+                # Keep only Close (or Adj Close if available, history usually returns 'Close' adjusted for splits)
+                # Note: yf.Ticker.history returns 'Close' which is split-adjusted. Dividends are separate.
+                # For collinearity, Close is fine.
+                data_frames[ticker] = hist['Close']
+        except Exception as e:
+            print(f"Failed to fetch {ticker}: {e}")
+            
+    if not data_frames:
+        print("yfinance failed to return any data. Falling back to mock data.")
         data = pd.DataFrame()
+    else:
+        # Align all series
+        data = pd.DataFrame(data_frames)
+    
+    # Ensure we have a DataFrame even if empty
+    if data.empty:
+         data = pd.DataFrame()
+    else:
+        # Normalize index to timezone-naive to match expected_dates
+        if data.index.tz is not None:
+             data.index = data.index.tz_localize(None)
+        # Also normalize to midnight to ensure matching with bdate_range if times differ
+        data.index = data.index.normalize()
 
     # Align to common index if sufficient data, otherwise rebuild index
     # We will ensure the dataframe covers the requested period with business days
