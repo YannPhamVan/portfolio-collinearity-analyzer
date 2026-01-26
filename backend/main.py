@@ -1,9 +1,22 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from models import PortfolioInput, AnalysisResult
 from data import fetch_historical_data
 from analysis import analyze_portfolio
 
 app = FastAPI(title="Portfolio Collinearity Analyzer", version="1.0.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
 @app.post("/analyze", response_model=AnalysisResult)
 async def analyze_endpoint(payload: PortfolioInput):
