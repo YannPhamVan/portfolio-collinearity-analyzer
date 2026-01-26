@@ -57,9 +57,57 @@ jobs:
         env:
           CI: true
 
+  integration-test:
+    name: Integration Tests
+    needs: [test-backend, test-frontend]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Build Docker image
+        run: docker build -t portfolio-test .
+      
+      - name: Run container
+        run: |
+          docker run -d -p 8000:8000 --name test-container portfolio-test
+          sleep 10  # Wait for container to start
+      
+      - name: Test health endpoint
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/health)
+          if [ "$response" != "200" ]; then
+            echo "Health check failed with status $response"
+            docker logs test-container
+            exit 1
+          fi
+          echo "✅ Health check passed"
+      
+      - name: Test analyze endpoint
+        run: |
+          response=$(curl -s -X POST http://localhost:8000/analyze \
+            -H "Content-Type: application/json" \
+            -d '{"isins": ["FAKE1", "FAKE2"], "investment_horizon_years": 1}')
+          
+          if echo "$response" | grep -q "correlation_matrix"; then
+            echo "✅ Analyze endpoint working"
+          else
+            echo "❌ Analyze endpoint failed"
+            echo "Response: $response"
+            docker logs test-container
+            exit 1
+          fi
+      
+      - name: Cleanup
+        if: always()
+        run: |
+          docker stop test-container || true
+          docker rm test-container || true
+
   deploy:
     name: Deploy to Render
-    needs: [test-backend, test-frontend]
+    needs: [test-backend, test-frontend, integration-test]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     
