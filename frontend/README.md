@@ -2,6 +2,8 @@
 
 Minimal React frontend for the Portfolio Collinearity Analyzer.
 
+Frontend communication with the backend is centralized through a dedicated API client, and the core workflow is covered by an integration-style frontend test.
+
 ## Prerequisites
 - Node.js and npm installed.
 - Backend running on `http://127.0.0.1:8000`.

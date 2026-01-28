@@ -4,6 +4,8 @@
 
 A full-stack application that detects redundant assets in financial portfolios by analyzing historical price correlations and coefficients of determination (R²). This project demonstrates end-to-end AI-assisted development, from architecture design to production deployment.
 
+Frontend communication with the backend is centralized through a dedicated API client, and the core workflow is covered by an integration-style frontend test.
+
 ---
 
 ## Table of Contents
