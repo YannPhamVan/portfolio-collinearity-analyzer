@@ -127,10 +127,11 @@ This project was developed using AI tools throughout the entire software develop
 
 ### MCP (Model Context Protocol) Usage
 
-This project demonstrates practical use of the Model Context Protocol (MCP) to enhance the AI development workflow:
-- **Documentation Access**: Used the `Context7` MCP server as an authoritative source for up-to-date FastAPI and Pydantic v2 documentation.
-- **Best Practice Alignment**: Leveraged MCP-provided documentation to refactor the backend, ensuring alignment with modern patterns (e.g., Pydantic v2 `field_validator`, `Annotated` types, and async consistency).
-- **Tool-Calling Integration**: The backend API itself follows MCP-like principles of clear resource schemas and stateless, tool-driven interactions.
+This project demonstrates practical use of the Model Context Protocol (MCP) to enhance the AI-assisted development workflow:
+
+- **Documentation Access**: Used the `Context7` MCP server as an authoritative source for up-to-date FastAPI and Pydantic v2 documentation during backend refactoring.
+- **Best Practice Alignment**: MCP-enabled documentation was consulted to migrate the codebase to modern patterns (e.g., Pydantic v2 `field_validator`, `Annotated` types, async endpoints).
+- **AI Workflow Integration**: ChatGPT was used to design and refine prompts executed by the Antigravity agent, combining MCP documentation access with automated refactoring and validation steps.
 
 ---
 
