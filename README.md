@@ -125,12 +125,12 @@ This project was developed using AI tools throughout the entire software develop
 - AI acted as an expert pair programmer, not an autonomous agent
 - Developer iterated on prompts when initial outputs didn't meet requirements
 
-### MCP (Model Context Protocol) Influence
+### MCP (Model Context Protocol) Usage
 
-While no custom MCP server was implemented for this project, the development workflow was influenced by MCP concepts:
-- **Separation of Concerns**: Backend API acts as a "tool" that frontend can invoke (similar to MCP tool calling)
-- **Structured Communication**: OpenAPI spec defines a strict contract between components (analogous to MCP resource schemas)
-- **Stateless Interactions**: Each API call is independent, mirroring MCP's request-response pattern
+This project demonstrates practical use of the Model Context Protocol (MCP) to enhance the AI development workflow:
+- **Documentation Access**: Used the `Context7` MCP server as an authoritative source for up-to-date FastAPI and Pydantic v2 documentation.
+- **Best Practice Alignment**: Leveraged MCP-provided documentation to refactor the backend, ensuring alignment with modern patterns (e.g., Pydantic v2 `field_validator`, `Annotated` types, and async consistency).
+- **Tool-Calling Integration**: The backend API itself follows MCP-like principles of clear resource schemas and stateless, tool-driven interactions.
 
 ---
 
