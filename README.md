@@ -217,6 +217,7 @@ The React frontend (`frontend/src/App.js`) provides:
   - Correlation matrix as HTML table
   - High R² pairs as styled list items
 - **Error Handling**: Displays backend error messages to user
+- **Modern Architecture**: All backend communication is centralized through a dedicated API client (`src/api/client.js`), and the core workflow is covered by an integration-style frontend test.
 
 ### Backend Call Centralization
 
