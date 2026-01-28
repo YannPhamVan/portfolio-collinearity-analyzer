@@ -1,10 +1,9 @@
 import pandas as pd
 import numpy as np
 import yfinance as yf
-from typing import List
 from datetime import datetime, timedelta
 
-def fetch_historical_data(isins: List[str], years: int) -> pd.DataFrame:
+def fetch_historical_data(isins: list[str], years: int) -> pd.DataFrame:
     """
     Fetches historical daily adjusted close prices for the given ISINs/tickers.
     If yfinance fails or returns empty data for a ticker, generates mock random walk data.

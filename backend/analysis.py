@@ -1,12 +1,11 @@
 import pandas as pd
-import numpy as np
-from typing import List, Dict
 from models import AnalysisResult, AssetPair
 
 def analyze_portfolio(prices_df: pd.DataFrame) -> AnalysisResult:
     """
-    Computes correlation and R2 matrices from the prices DataFrame.
-    Identifies pairs with R^2 > 0.5.
+    Computes correlation and R-squared matrices from the prices DataFrame.
+    
+    Identifies pairs with R^2 > 0.5 and sorts them by strength.
     """
     # Calculate daily returns
     returns_df = prices_df.pct_change().dropna()
@@ -35,10 +34,10 @@ def analyze_portfolio(prices_df: pd.DataFrame) -> AnalysisResult:
             if r2 > 0.5:
                 correlation = corr_matrix.iloc[i, j]
                 pair = AssetPair(
-                    asset_a=asset_a,
-                    asset_b=asset_b,
-                    correlation=round(correlation, 4),
-                    r_squared=round(r2, 4)
+                    asset_a=str(asset_a),
+                    asset_b=str(asset_b),
+                    correlation=round(float(correlation), 4),
+                    r_squared=round(float(r2), 4)
                 )
                 high_r2_pairs.append(pair)
                 
