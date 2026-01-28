@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
+import { analyzePortfolio } from './api/client';
 
 function App() {
   const [isins, setIsins] = useState("AAPL, MSFT, GOOG, TSLA");
@@ -26,23 +27,10 @@ function App() {
     }
 
     try {
-      const response = await fetch('/analyze', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          isins: isinList,
-          investment_horizon_years: parseInt(horizon),
-        }),
+      const data = await analyzePortfolio({
+        isins: isinList,
+        investment_horizon_years: parseInt(horizon),
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || "Analysis failed");
-      }
-
-      const data = await response.json();
       setResult(data);
     } catch (err) {
       setError(err.message);
@@ -57,8 +45,9 @@ function App() {
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Assets (Comma Separated Tickers)</label>
+          <label htmlFor="assets-input">Assets (Comma Separated Tickers)</label>
           <textarea
+            id="assets-input"
             rows="3"
             value={isins}
             onChange={(e) => setIsins(e.target.value)}
@@ -67,8 +56,9 @@ function App() {
         </div>
 
         <div className="form-group">
-          <label>Investment Horizon (Years)</label>
+          <label htmlFor="horizon-input">Investment Horizon (Years)</label>
           <input
+            id="horizon-input"
             type="number"
             min="1"
             max="10"

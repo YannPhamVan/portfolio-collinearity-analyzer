@@ -32,3 +32,19 @@ Minimal React frontend for the Portfolio Collinearity Analyzer.
    - Set investment horizon.
    - Click "Analyze".
    - View the Correlation Matrix and High $R^2$ Pairs.
+
+## Architecture
+
+The frontend follows a clean separation of concerns:
+- **`src/api/client.js`**: Centralized API client for all backend communication.
+- **`src/App.js`**: Main UI logic and state management, using the API client.
+- **`src/App.css`**: Application styling.
+
+## Testing
+
+The project includes a comprehensive test suite covering the core analysis workflow.
+To run tests:
+```bash
+npm test
+```
+The tests mock the backend API to ensure the UI behaves correctly under various conditions (success, error, validation).
